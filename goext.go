@@ -48,7 +48,9 @@ func sqlite3_result_error(ctx *C.struct_sqlite3_context, err error) {
 }
 
 func sqlite3_result_text(ctx *C.struct_sqlite3_context, text string) {
-	C.sqlite3_result_text(ctx, C.CString(text), -1, (*[0]byte)(unsafe.Pointer(C.free)))
+	ctext := C.CString(text)
+	C.sqlite3_result_text(ctx, ctext, -1, C.SQLITE_TRANSIENT)
+	C.free(unsafe.Pointer(ctext))
 }
 
 //export Jaro
